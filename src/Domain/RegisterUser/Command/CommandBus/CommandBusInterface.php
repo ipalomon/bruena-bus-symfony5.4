@@ -6,7 +6,6 @@ use App\Domain\RegisterUser\Command\Command\RegisterUser;
 
 interface CommandBusInterface
 {
-    public function subscribe(string $commandClassName, string $handlerClassName);
+    public function handle(RegisterUser $command);
 
-    public function dispatch(RegisterUser $command);
 }

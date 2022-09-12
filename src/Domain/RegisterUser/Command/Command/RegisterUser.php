@@ -13,21 +13,4 @@ class RegisterUser
         $this->password = $password;
     }
 
-    /**
-     * @return string
-     */
-    public function getUsername(): string
-    {
-        return $this->username;
-    }
-
-    /**
-     * @return string
-     */
-    public function getPassword(): string
-    {
-        return $this->password;
-    }
-
-
 }

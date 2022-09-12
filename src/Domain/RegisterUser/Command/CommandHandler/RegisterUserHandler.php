@@ -2,29 +2,29 @@
 
 namespace App\Domain\RegisterUser\Command\CommandHandler;
 
-use App\Domain\RegisterUser\Command\Command\RegisterUser;
+
+
+use App\Domain\RegisterUser\Command\CommandBus\CommandBusInterface;
 use App\Entity\Users;
 use App\Repository\UsersRepository;
 
-final class RegisterUserHandler
+final class RegisterUserHandler implements CommandBusInterface
 {
 
     private UsersRepository $repository;
-    private Users $user;
 
-    public function __construct(UsersRepository $repository,  Users $user)
+    public function __construct(UsersRepository $repository)
     {
         $this->repository = $repository;
-        $this->user = $user;
     }
 
-    public static function handle($username, $password)
+    public function handle($command)
     {
-        $command = new RegisterUser($username, $password);
-echo "pasa";
-     /*   $this->user->setUsername($command->username);
-        $this->user->setPassword($command->password);
+        $user = new Users();
 
-        $this->repository->add($this->user);*/
+        $user->setUsername($command->username);
+        $user->setPassword($command->password);
+
+        $this->repository->add($user, true);
     }
 }

@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Domain\RegisterUser\Command\Command\RegisterUser;
 use App\Domain\RegisterUser\Command\CommandHandler;
 use App\Domain\RegisterUser\Command\CommandHandler\RegisterUserHandler;
+use App\Repository\UsersRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -12,17 +13,11 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class RegistrationController  extends AbstractController
 {
-    private CommandHandler $bus;
-
-    public function __construct(CommandHandler $bus)
-    {
-        $this->bus = $bus;
-    }
 
     /**
      * @Route("/user", name="new-user")
      */
-    public function register(Request $request): JsonResponse
+    public function register(Request $request, RegisterUserHandler $registerUserHandler): JsonResponse
     {
 
         $parameters = json_decode($request->getContent(), true);
@@ -32,11 +27,8 @@ class RegistrationController  extends AbstractController
         //$command = new RegisterUser($request->request->get('username'), $request->request->get('password'));
         $command = new RegisterUser($username, $password);
 
+        $registerUserHandler->handle($command );
 
-        $this->bus->subscribe(RegisterUser::class, RegisterUserHandler::class);
-
-        $this->bus->dispatch($command);
-
-        return $this->json(['user' => $command]);
+        return $this->json(['user' => $command], 200, ['Content-Type' => 'application/json']);
     }
 }
